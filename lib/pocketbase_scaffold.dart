@@ -1,10 +1,10 @@
-export 'core/models/pocketbase_model.dart';
-export 'core/models/user_model.dart';
+export 'models/pocketbase_model.dart';
+export 'models/user_model.dart';
 
-export 'core/provider/pocketbase_provider.dart';
+export 'provider/pocketbase_provider.dart';
 
-export 'core/repositories/pocketbase_repository.dart';
-export 'core/repositories/users_repository.dart';
+export 'repositories/pocketbase_repository.dart';
+export 'repositories/users_repository.dart';
 
-export 'core/views/login_page.dart';
-export 'core/auth.dart';
+export 'views/login_page.dart';
+export 'auth.dart';

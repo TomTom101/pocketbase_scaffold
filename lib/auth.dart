@@ -44,6 +44,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   bool get isAuthenticated => state is Authenticated;
   bool get isLoading => state is AuthLoading;
+  User get me => (state as Authenticated).user;
 
   Future<void> logout() async {
     authStore.clear();
@@ -68,6 +69,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final result = await userService.authWithPassword(email, password);
       if (result.record != null) {
         final user = User(
+          id: result.record?.id,
           email: result.record?.data['email'],
           isAdmin: result.record?.data['admin'],
         );
