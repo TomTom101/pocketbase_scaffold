@@ -20,9 +20,13 @@ abstract class PocketbaseRepository<T extends BaseModel>
     final data = await recordService.getFullList(expand: relations?.join(","));
     return data.map((rm) {
       var json = rm.toJson();
+      // if (rm.expand.isNotEmpty) {
+      //   rm.expand.forEach((key, value) => rm.data[key] = value);
+      // }
 
       if (json.containsKey("expand") && (json['expand'] as Map).isNotEmpty) {
         (json['expand'] as Map).forEach((field, data) => json[field] = data);
+        json.remove("expand");
       } else {
         for (final relation in relations ?? []) {
           if ((json[relation] as String).isEmpty) {
@@ -34,7 +38,7 @@ abstract class PocketbaseRepository<T extends BaseModel>
     });
   }
 
-  Future<String> create(T model) async {
+  Map<String, dynamic> _convertToPbBody(BaseModel model) {
     var j = model.toJson();
     // TODO move to private function
     for (final relation in relations ?? []) {
@@ -49,14 +53,19 @@ abstract class PocketbaseRepository<T extends BaseModel>
             .toList();
       }
     }
+    return j;
+  }
+
+  Future<String> create(T model) async {
+    final j = _convertToPbBody(model);
     final rec = await recordService.create(body: j);
     getAll(loading: false);
     return rec.id;
   }
 
   Future<void> update(T model) async {
-    // TODO transform json as in create()
-    await recordService.update(model.id!, body: model.toJson());
+    final j = _convertToPbBody(model);
+    await recordService.update(model.id!, body: j);
     getAll(loading: false);
   }
 
