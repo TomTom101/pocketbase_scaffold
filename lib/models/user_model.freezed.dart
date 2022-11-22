@@ -21,7 +21,7 @@ User _$UserFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$User {
   String? get id => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
+  String get username => throw _privateConstructorUsedError;
   bool get isAdmin => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -34,7 +34,7 @@ abstract class $UserCopyWith<$Res> {
   factory $UserCopyWith(User value, $Res Function(User) then) =
       _$UserCopyWithImpl<$Res, User>;
   @useResult
-  $Res call({String? id, String email, bool isAdmin});
+  $Res call({String? id, String username, bool isAdmin});
 }
 
 /// @nodoc
@@ -51,7 +51,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
   @override
   $Res call({
     Object? id = freezed,
-    Object? email = null,
+    Object? username = null,
     Object? isAdmin = null,
   }) {
     return _then(_value.copyWith(
@@ -59,9 +59,9 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
               as String,
       isAdmin: null == isAdmin
           ? _value.isAdmin
@@ -77,7 +77,7 @@ abstract class _$$_UserCopyWith<$Res> implements $UserCopyWith<$Res> {
       __$$_UserCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? id, String email, bool isAdmin});
+  $Res call({String? id, String username, bool isAdmin});
 }
 
 /// @nodoc
@@ -90,7 +90,7 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
   @override
   $Res call({
     Object? id = freezed,
-    Object? email = null,
+    Object? username = null,
     Object? isAdmin = null,
   }) {
     return _then(_$_User(
@@ -98,9 +98,9 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String?,
-      email: null == email
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
               as String,
       isAdmin: null == isAdmin
           ? _value.isAdmin
@@ -113,21 +113,21 @@ class __$$_UserCopyWithImpl<$Res> extends _$UserCopyWithImpl<$Res, _$_User>
 /// @nodoc
 @JsonSerializable()
 class _$_User with DiagnosticableTreeMixin implements _User {
-  const _$_User({this.id, required this.email, this.isAdmin = false});
+  const _$_User({this.id, required this.username, this.isAdmin = false});
 
   factory _$_User.fromJson(Map<String, dynamic> json) => _$$_UserFromJson(json);
 
   @override
   final String? id;
   @override
-  final String email;
+  final String username;
   @override
   @JsonKey()
   final bool isAdmin;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'User(id: $id, email: $email, isAdmin: $isAdmin)';
+    return 'User(id: $id, username: $username, isAdmin: $isAdmin)';
   }
 
   @override
@@ -136,7 +136,7 @@ class _$_User with DiagnosticableTreeMixin implements _User {
     properties
       ..add(DiagnosticsProperty('type', 'User'))
       ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('email', email))
+      ..add(DiagnosticsProperty('username', username))
       ..add(DiagnosticsProperty('isAdmin', isAdmin));
   }
 
@@ -146,13 +146,14 @@ class _$_User with DiagnosticableTreeMixin implements _User {
         (other.runtimeType == runtimeType &&
             other is _$_User &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.email, email) || other.email == email) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
             (identical(other.isAdmin, isAdmin) || other.isAdmin == isAdmin));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, isAdmin);
+  int get hashCode => Object.hash(runtimeType, id, username, isAdmin);
 
   @JsonKey(ignore: true)
   @override
@@ -171,7 +172,7 @@ class _$_User with DiagnosticableTreeMixin implements _User {
 abstract class _User implements User {
   const factory _User(
       {final String? id,
-      required final String email,
+      required final String username,
       final bool isAdmin}) = _$_User;
 
   factory _User.fromJson(Map<String, dynamic> json) = _$_User.fromJson;
@@ -179,7 +180,7 @@ abstract class _User implements User {
   @override
   String? get id;
   @override
-  String get email;
+  String get username;
   @override
   bool get isAdmin;
   @override

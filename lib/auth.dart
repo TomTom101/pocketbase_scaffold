@@ -70,7 +70,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       if (result.record != null) {
         final user = User(
           id: result.record?.id,
-          email: result.record?.data['email'],
+          username: result.record?.data['username'],
           isAdmin: result.record?.data['admin'],
         );
         authStore.save(result.token, result.record);

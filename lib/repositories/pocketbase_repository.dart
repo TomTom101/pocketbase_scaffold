@@ -68,7 +68,7 @@ abstract class PocketbaseRepository<T extends BaseModel>
     /// Returns an error string, null for success
     try {
       await recordService.create(
-        body: JsonConverter.toRecordModelJson(model),
+        body: JsonConverter.toRecordModelJson(model, relations: relations),
       );
       getAll(loading: false);
     } on ClientException catch (e) {
@@ -81,7 +81,7 @@ abstract class PocketbaseRepository<T extends BaseModel>
     try {
       await recordService.update(
         model.id!,
-        body: JsonConverter.toRecordModelJson(model),
+        body: JsonConverter.toRecordModelJson(model, relations: relations),
       );
     } on ClientException catch (e) {
       return "${e.response['message']}: ${e.response['data']}";

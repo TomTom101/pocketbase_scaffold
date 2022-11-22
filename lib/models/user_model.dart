@@ -9,7 +9,7 @@ part 'user_model.g.dart';
 class User extends BaseModel with _$User {
   const factory User({
     String? id,
-    required String email,
+    required String username,
     @Default(false) bool isAdmin,
   }) = _User;
 
