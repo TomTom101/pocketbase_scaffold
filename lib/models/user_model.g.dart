@@ -9,11 +9,13 @@ part of 'user_model.dart';
 _$_User _$$_UserFromJson(Map<String, dynamic> json) => _$_User(
       id: json['id'] as String?,
       username: json['username'] as String,
+      name: json['name'] as String,
       isAdmin: json['isAdmin'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$_UserToJson(_$_User instance) => <String, dynamic>{
       'id': instance.id,
       'username': instance.username,
+      'name': instance.name,
       'isAdmin': instance.isAdmin,
     };

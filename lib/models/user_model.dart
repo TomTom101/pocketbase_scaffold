@@ -7,11 +7,15 @@ part 'user_model.g.dart';
 
 @freezed
 class User extends BaseModel with _$User {
-  const factory User({
+  User._();
+  factory User({
     String? id,
     required String username,
+    required String name,
     @Default(false) bool isAdmin,
   }) = _User;
 
   factory User.fromJson(Map<String, Object?> json) => _$UserFromJson(json);
+
+  String get displayName => name.isEmpty ? username : name;
 }

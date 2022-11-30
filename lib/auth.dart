@@ -73,6 +73,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
         final user = User(
           id: result.record?.id,
           username: result.record?.data['username'],
+          name: result.record?.data['name'],
           isAdmin: result.record?.data['admin'],
         );
         authStore.save(result.token, result.record);
@@ -92,6 +93,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
       final user = User(
         id: result.record?.id,
         username: result.record?.data['username'],
+        name: result.record?.data['name'],
         isAdmin: false,
       );
       authStore.save(result.token, result.record);

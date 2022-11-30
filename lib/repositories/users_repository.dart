@@ -17,7 +17,11 @@ class UsersRepository {
 
   Future<List<User>> getAll() async {
     return (await userService.getFullList())
-        .map((user) => User(username: user.data['username'], isAdmin: false))
+        .map((user) => User(
+              username: user.data['username'],
+              name: user.data['name'],
+              isAdmin: false,
+            ))
         .toList();
   }
 }
