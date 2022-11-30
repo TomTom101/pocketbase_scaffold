@@ -16,6 +16,7 @@ dependencies:
   json_annotation: ^4.7.0
   flutter_form_builder: ^7.7.0
   form_builder_validators: ^8.3.0
+  url_launcher: ^6.1.7
   flutter:
     sdk: flutter
 

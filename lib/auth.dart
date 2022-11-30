@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'provider/pocketbase_provider.dart';
 import 'auth_local_storage.dart';
@@ -38,6 +39,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     authWithToken();
   }
 
+  static const redirectUrl = 'http://localhost:8081/login';
   final RecordService userService;
   final AuthStore authStore;
   final AuthLocalStorage authLocalStorage;
@@ -53,7 +55,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
   }
 
   void authWithToken() {
-    final tokenModel = authLocalStorage.loadAuthRecord();
+    final tokenModel = authLocalStorage.loadJsonRecord("model");
     if (tokenModel != null) {
       RecordModel model = RecordModel.fromJson(tokenModel);
       authStore.save(tokenModel['token'], model);
@@ -63,7 +65,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<void> authWithPassword(String email, String password) async {
     state = AuthLoading();
     try {
       final result = await userService.authWithPassword(email, password);
@@ -80,5 +82,31 @@ class AuthNotifier extends StateNotifier<AuthState> {
     } on ClientException catch (e) {
       state = Unauthenticated(message: e.response['message']);
     }
+  }
+
+  Future<void> authWithOAuth2(String code) async {
+    try {
+      final provider = authLocalStorage.loadJsonRecord("provider");
+      final result = await userService.authWithOAuth2(
+          provider!['name'], code, provider['codeVerifier'], redirectUrl);
+      final user = User(
+        id: result.record?.id,
+        username: result.record?.data['username'],
+        isAdmin: false,
+      );
+      authStore.save(result.token, result.record);
+      await authLocalStorage.saveAuthRecord(result);
+      state = Authenticated(user);
+    } on ClientException catch (e) {
+      state = Unauthenticated(message: e.response['message']);
+    }
+  }
+
+  Future<void> loginProvider(AuthMethodProvider provider) async {
+    state = AuthLoading();
+    final url = Uri.parse('${provider.authUrl}$redirectUrl');
+    await authLocalStorage.saveProviderRecord(provider);
+    print(url.toString());
+    await launchUrl(url, webOnlyWindowName: "_self");
   }
 }

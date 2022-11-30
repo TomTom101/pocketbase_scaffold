@@ -64,29 +64,43 @@ abstract class PocketbaseRepository<T extends BaseModel>
         .map((rm) => JsonConverter.toBaseModelJson(rm, relations: relations));
   }
 
-  Future<String?> create(T model) async {
+  Future<AsyncValue<RecordModel>> create(T model) async {
     /// Returns an error string, null for success
+    ///
+    // final state = await AsyncValue.guard(() => {
+    //       recordService.create(
+    //         body: JsonConverter.toRecordModelJson(model, relations: relations),
+    //       )
+    //     });
     try {
-      await recordService.create(
+      final rm = await recordService.create(
         body: JsonConverter.toRecordModelJson(model, relations: relations),
       );
       getAll(loading: false);
+      return AsyncData<RecordModel>(rm);
     } on ClientException catch (e) {
-      return "${e.response['message']}: ${e.response['data']}";
+      return AsyncError<RecordModel>(
+        "${e.response['message']}: ${e.response['data']}",
+        StackTrace.current,
+      );
+      // return "${e.response['message']}: ${e.response['data']}";
     }
-    return null;
   }
 
-  Future<String?> update(T model) async {
+  Future<AsyncValue<RecordModel>> update(T model) async {
     try {
-      await recordService.update(
+      final rm = await recordService.update(
         model.id!,
         body: JsonConverter.toRecordModelJson(model, relations: relations),
       );
+      getAll(loading: false);
+      return AsyncData<RecordModel>(rm);
     } on ClientException catch (e) {
-      return "${e.response['message']}: ${e.response['data']}";
+      return AsyncError<RecordModel>(
+        "${e.response['message']}: ${e.response['data']}",
+        StackTrace.current,
+      );
     }
-    getAll(loading: false);
   }
 
   Future<void> delete(String id) async {

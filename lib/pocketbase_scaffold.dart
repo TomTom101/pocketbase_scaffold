@@ -11,3 +11,4 @@ export 'auth.dart';
 
 export 'package:pocketbase/src/client_exception.dart';
 export 'package:pocketbase/src/services/record_service.dart';
+export 'package:pocketbase/src/dtos/record_model.dart';

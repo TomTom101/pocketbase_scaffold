@@ -15,8 +15,12 @@ class AuthLocalStorage {
     await prefs.setString("model", jsonEncode(record.toJson()));
   }
 
-  Map<String, dynamic>? loadAuthRecord() {
-    String modelJson = prefs.getString("model") ?? "";
+  Future<void> saveProviderRecord(AuthMethodProvider provider) async {
+    await prefs.setString("provider", jsonEncode(provider.toJson()));
+  }
+
+  Map<String, dynamic>? loadJsonRecord(String key) {
+    String modelJson = prefs.getString(key) ?? "";
     if (modelJson.isNotEmpty) {
       return jsonDecode(modelJson);
     }
