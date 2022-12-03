@@ -82,7 +82,7 @@ class LoginPage extends ConsumerWidget {
                         name: "email",
                         initialValue: "user",
                         decoration: const InputDecoration(
-                          label: Text("E-mail or user name"),
+                          label: Text("E-mail or username"),
                         ),
                         validator: FormBuilderValidators.compose([
                           FormBuilderValidators.required(),
