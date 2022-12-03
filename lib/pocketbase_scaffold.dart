@@ -9,6 +9,4 @@ export 'repositories/users_repository.dart';
 export 'views/login_page.dart';
 export 'auth.dart';
 
-export 'package:pocketbase/src/client_exception.dart';
-export 'package:pocketbase/src/services/record_service.dart';
-export 'package:pocketbase/src/dtos/record_model.dart';
+export 'package:pocketbase/pocketbase.dart';
