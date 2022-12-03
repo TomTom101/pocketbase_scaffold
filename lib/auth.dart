@@ -39,7 +39,6 @@ class AuthNotifier extends StateNotifier<AuthState> {
     authWithToken();
   }
 
-  static const redirectUrl = 'http://localhost:8081/login';
   final RecordService userService;
   final AuthStore authStore;
   final AuthLocalStorage authLocalStorage;
@@ -89,7 +88,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     try {
       final provider = authLocalStorage.loadJsonRecord("provider");
       final result = await userService.authWithOAuth2(
-          provider!['name'], code, provider['codeVerifier'], redirectUrl);
+          provider!['name'], code, provider['codeVerifier'], redirectUrl());
       final user = User(
         id: result.record?.id,
         username: result.record?.data['username'],
@@ -104,11 +103,15 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  String redirectUrl() {
+    final uri = Uri.parse(Uri.base.toString());
+    return "${uri.scheme}://${uri.host}:${uri.port}/login";
+  }
+
   Future<void> loginProvider(AuthMethodProvider provider) async {
     state = AuthLoading();
-    final url = Uri.parse('${provider.authUrl}$redirectUrl');
+    final url = Uri.parse('${provider.authUrl}${redirectUrl()}');
     await authLocalStorage.saveProviderRecord(provider);
-    print(url.toString());
     await launchUrl(url, webOnlyWindowName: "_self");
   }
 }
