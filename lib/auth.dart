@@ -105,6 +105,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
   String redirectUrl() {
     final uri = Uri.parse(Uri.base.toString());
+    print("Host: ${uri.host}");
     return "${uri.scheme}://${uri.host}:${uri.port}/login";
   }
 

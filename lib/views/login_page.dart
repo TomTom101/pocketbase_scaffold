@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 
 import '../auth.dart';
@@ -20,19 +22,35 @@ extension StringCasingExtension on String {
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 }
 
-class LoginPage extends ConsumerWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
     this.authCode,
     super.key,
   });
+
   static String get routeName => 'login';
   static String get routeLocation => '/$routeName';
-
   final String? authCode;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  @override
+  void initState() {
+    if (widget.authCode != null) {
+      ref.read(authProvider.notifier).authWithOAuth2(widget.authCode!);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final authProviders = ref.watch(authServicesProvider);
+    final isOscureText = ref.watch(isOscureTextProvider);
+    final screenSize = MediaQuery.of(context).size;
+
     void signIn() async {
       final isValidated = formKey.currentState?.saveAndValidate() ?? false;
       if (!isValidated) {
@@ -55,23 +73,14 @@ class LoginPage extends ConsumerWidget {
       }
     });
 
-    final screenSize = MediaQuery.of(context).size;
-    final authState = ref.watch(authProvider);
-    final isOscureText = ref.watch(isOscureTextProvider);
-
-    if (authCode != null) {
-      print(authCode);
-      ref.read(authProvider.notifier).authWithOAuth2(authCode!);
-    }
-
     return Scaffold(
       appBar: null,
-      body: Center(
-        child: SizedBox(
-          width: screenSize.width / 3,
-          child: authCode != null
-              ? const Text("Logged in – redirecting …")
-              : FormBuilder(
+      body: (widget.authCode != null)
+          ? const Center(child: Text("redirecting …"))
+          : Center(
+              child: SizedBox(
+                width: screenSize.width / 3,
+                child: FormBuilder(
                   key: formKey,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
@@ -95,11 +104,9 @@ class LoginPage extends ConsumerWidget {
                         decoration: InputDecoration(
                           label: const Text("Password"),
                           suffixIcon: IconButton(
-                            onPressed: () {
-                              ref
-                                  .read(isOscureTextProvider.notifier)
-                                  .update((state) => !isOscureText);
-                            },
+                            onPressed: () => ref
+                                .read(isOscureTextProvider.notifier)
+                                .update((state) => !isOscureText),
                             icon: !isOscureText
                                 ? const Icon(Icons.visibility)
                                 : const Icon(Icons.visibility_off),
@@ -112,37 +119,28 @@ class LoginPage extends ConsumerWidget {
                         ]),
                       ),
                       const SizedBox(height: 40),
-                      Consumer(builder: (context, ref, _) {
-                        if (authState is AuthLoading) {
-                          return SizedBox(
-                            height: 40,
-                            width: screenSize.width,
-                            child: const ElevatedButton(
-                              onPressed: null,
-                              child: LinearProgressIndicator(),
-                            ),
-                          );
-                        }
-
-                        return SizedBox(
-                          height: 40,
-                          width: screenSize.width,
-                          child: ElevatedButton(
-                            onPressed: signIn,
-                            child: const Text("Log in"),
-                          ),
-                        );
-                      }),
+                      SizedBox(
+                        height: 40,
+                        width: screenSize.width,
+                        child: (authProvider.notifier is AuthLoading)
+                            ? const ElevatedButton(
+                                onPressed: null,
+                                child: LinearProgressIndicator(),
+                              )
+                            : ElevatedButton(
+                                onPressed: signIn,
+                                child: const Text("Log in"),
+                              ),
+                      ),
                       const SizedBox(height: 40),
                       authProviders.when(
                         data: (data) => Column(
                           children: data.authProviders
-                              .map((provider) => ElevatedButton(
+                              .map((provider) => SignInButton(
+                                    Buttons.GoogleDark,
                                     onPressed: () => ref
                                         .read(authProvider.notifier)
                                         .loginProvider(provider),
-                                    child: Text(
-                                        "Login with ${provider.name.toCapitalized()}"),
                                   ))
                               .toList(),
                         ),
@@ -152,8 +150,8 @@ class LoginPage extends ConsumerWidget {
                     ],
                   ),
                 ),
-        ),
-      ),
+              ),
+            ),
     );
   }
 }
